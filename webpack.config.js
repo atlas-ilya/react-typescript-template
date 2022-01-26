@@ -9,6 +9,8 @@ const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin'
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const appConfig = require('./config/config');
 const buildInfo = require('./config/buildInfo');
+const ignoredFiles = require('react-dev-utils/ignoredFiles');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 buildInfo();
 
@@ -93,6 +95,7 @@ function getCodeSplittingConfig() {
             name: 'manifest',
         },
         minimizer: [
+            new UglifyJsPlugin(),
             new TerserPlugin({
                 terserOptions: {
                     ecma: 8,
@@ -119,6 +122,11 @@ function getPlugins() {
             inject: 'body',
         }),
 
+        new BundleAnalyzerPlugin({
+            analyzerMode: 'disabled',
+            generateStatsFile: true,
+            statsOptions: { source: false }
+        }),
         /**
          * Pass NODE_ENV and APP_CONFIG to the application so that
          * "ConfigService" and "NodeService" can be used within TS/TSX files.
@@ -140,11 +148,6 @@ function getPlugins() {
         /**
          * Add additional plugin based on NODE_ENV === 'development'
          */
-        plugins.push(new BundleAnalyzerPlugin({
-            analyzerMode: 'disabled',
-            generateStatsFile: true,
-            statsOptions: { source: false }
-        }));
 
     } else {
 
@@ -152,6 +155,38 @@ function getPlugins() {
     }
 
     return plugins;
+}
+
+
+const sockPath = process.env.WDS_SOCKET_PATH; // default: '/ws'
+const sockPort = process.env.WDS_SOCKET_PORT;
+
+function getDevServerConfig() {
+    return {
+        client: {
+            webSocketURL: {
+                pathname: sockPath,
+                port: sockPort,
+            },
+            overlay: {
+                errors: true,
+                warnings: false,
+            },
+        },
+        allowedHosts: 'all',
+        headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': '*',
+            'Access-Control-Allow-Headers': '*',
+        },
+        compress: true,
+        open: true,
+        https: appConfig.example.https,
+        port: process.env.WDS_SOCKET_PORT,
+        static: './dist',
+        hot: true,
+
+    };
 }
 
 
@@ -177,6 +212,7 @@ const webpackConfig = {
 
     optimization: getCodeSplittingConfig(),
     plugins: getPlugins(),
+
     module: {
         rules: getParserRules(),
     },
@@ -188,21 +224,7 @@ const webpackConfig = {
     devtool: 'source-map',
     entry: './src/index',
 
-    devServer: {
-        client: {
-            overlay: {
-                errors: true,
-                warnings: false,
-            },
-        },
-        allowedHosts: 'all',
-        compress: true,
-        open: true,
-        https: appConfig.example.https,
-        port: appConfig.example.port,
-        static: './dist',
-        hot: true,
-    },
+    devServer: getDevServerConfig(),
 };
 
 
