@@ -122,11 +122,11 @@ function getPlugins() {
             inject: 'body',
         }),
 
-        new BundleAnalyzerPlugin({
+    /*    new BundleAnalyzerPlugin({
             analyzerMode: 'disabled',
             generateStatsFile: true,
             statsOptions: { source: false }
-        }),
+        }),*/
         /**
          * Pass NODE_ENV and APP_CONFIG to the application so that
          * "ConfigService" and "NodeService" can be used within TS/TSX files.
@@ -222,7 +222,7 @@ const webpackConfig = {
     mode: isDevelopment ? "development" : "production",
     target: target,
 
-    devtool: 'source-map',
+    devtool: isDevelopment ? 'source-map' : false,
     entry: './src/index',
 
     devServer: getDevServerConfig(),
