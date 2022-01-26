@@ -200,13 +200,14 @@ const webpackConfig = {
         extensions: ['.js', '.jsx', '.ts', '.tsx', '.json', 'scss'],
         alias: {
             '@': path.resolve(APP_DIR),
+            '@api': path.resolve(APP_DIR, 'api/'),
             '@assets': path.resolve(APP_DIR, 'assets/'),
             '@images': path.resolve(APP_DIR, 'assets/images'),
             '@components': path.resolve(APP_DIR, 'components/'),
-            '@ui': path.resolve(APP_DIR, 'ui/'),
+            '@hooks': path.resolve(APP_DIR, 'hooks/'),
             '@services': path.resolve(APP_DIR, 'services/'),
             '@store': path.resolve(APP_DIR, 'store/'),
-            '@hooks': path.resolve(APP_DIR, 'hooks/'),
+            '@ui': path.resolve(APP_DIR, 'ui/'),
         },
     },
 
