@@ -221,7 +221,7 @@ const webpackConfig = {
     mode: isDevelopment ? "development" : "production",
     target: target,
 
-    mode: isDevelopment ? "development" : "production",
+    devtool: isDevelopment ? 'source-map' : false,
     entry: './src/index',
 
     devServer: getDevServerConfig(),
