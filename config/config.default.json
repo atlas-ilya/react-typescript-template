@@ -1,0 +1,8 @@
+{
+  "example": {
+    "port": 3000,
+    "https": true,
+    "baseUrl": "http://localhost:3000/",
+    "publicBasename": "react/"
+  }
+}
